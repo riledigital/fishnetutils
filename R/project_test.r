@@ -1,0 +1,118 @@
+# Scratch
+pacman::p_load('tigris', 'sf')
+
+fips("NY",
+     county = c('Kings',
+                'Queens',
+                'New York',
+                'Bronx County',
+                'Richmond'))
+
+
+# OK now get all the shapefiles for each county
+
+
+bronx <- county_subdivisions(
+  class = "sf",
+  county = '005',
+  cb = TRUE,
+  state = '36'
+)
+
+
+
+# sf::st_transform(bronx,crs=3628)
+# LI_FIPS <- 3628
+
+# Get geographies
+############################################################################
+
+bronx <- county_subdivisions(
+  class = "sf",
+  county = '005',
+  cb = TRUE,
+  state = '36'
+)
+
+# Make a clipping grid for each
+############################################################################
+
+#' make_clipped_grid
+#'
+#' @param shapes sf object to make a grid out of
+#' @param to_crs integer of EPSG CRS
+#' @param grid_size float representing grid size; takes unit of CRS
+#'
+#' @return sf object of grid items
+#' @export
+#'
+#' @examples
+make_clipped_grid <- function(shapes, to_crs, grid_size) {
+  # Perform CRS transformations first
+  shapes_transformed <- st_transform(shapes, crs = 3628)
+
+  # Create grid points
+  grid_points <-
+    st_transform(shapes, crs = 3628) %>%
+    st_make_grid(x = .,
+                 # this is the unit
+                 cellsize = grid_size,
+                 what = "centers")
+  # Clip the grid points to the transformed input shape
+  pts_output <- st_intersection(grid_points, shapes_transformed)
+  return(pts_output)
+}
+
+make_clipped_grid()
+
+#' make_buffered_road
+#'
+#' @param state_name String, name abbrev of the state
+#' @param county_name String, county name
+#' @param crs_in Integer, CRS EPSG number of the local CRS for transforms
+#' @param buffer_size Integer, the size of the buffer
+#'
+#' @return `sf` with a buffer around the roads
+#' @export
+#'
+#' @examples
+make_buffered_road <-
+  function(state_name,
+           county_name,
+           crs_in,
+           buffer_size = 1000) {
+    ## Takes in specifications for roads in a county,
+    ## returned the buffered areas
+    shape <- tigris::roads(state = state_name,
+                           county = county_name,
+                           class = 'sf') %>%
+      sf::st_transform(., crs = crs_in) %>%
+      sf::st_buffer(x = ., dist = buffer_size) %>%
+      sf::st_combine(x = .) %>%
+      sf::st_union(x = . , by_feature = TRUE)
+    return(shape)
+  }
+
+# make_buffered_road()
+
+out <- make_grid(bronx, 3628, 5000 * 3)
+plot(out)
+
+
+
+# Bronx 36005
+# Kings 36047
+# Queens 36081
+# Richmond 36085
+# NYC 36061
+county_subdivisions(
+  class = "sf",
+  county = '005',
+  cb = TRUE,
+  state = '36'
+) %>%
+  make_grid(., 3628, 5000 * 3) %>%
+  st_transform(., crs = 4326) %>%
+  st_write(obj = .,
+           dsn = 'Bronx_36005.geojson',
+           update = TRUE)

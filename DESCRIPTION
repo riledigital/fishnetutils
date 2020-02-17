@@ -1,0 +1,14 @@
+Package: fishnettools
+Type: Package
+Title: GIS fishnet generator
+Version: 0.1.0
+Author: Ri Le
+Maintainer: Ri Le <r.le@columbia.edu>
+Description: Utility functions that create fishnets points for GIS operations
+License: MIT License
+Encoding: UTF-8
+LazyData: true
+Imports:
+  sf,
+  tigris,
+  dplyr
