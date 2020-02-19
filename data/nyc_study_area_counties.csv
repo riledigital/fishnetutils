@@ -1,0 +1,6 @@
+Names,name_abbrev,fips_state,fips_county,crs_utm,crs_epsg
+New York,NY,36,61,2149,2263
+Bronx,NY,36,5,2149,2263
+ Kings,NY,36,47,2149,2263
+ Queens,NY,36,81,2149,2263
+ Richmond,NY,36,85,2149,2263

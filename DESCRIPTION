@@ -13,7 +13,9 @@ Imports:
   tigris,
   dplyr,
   fs,
-  devtools
+  devtools,
+  purrr,
+  magrittr
 Suggests: 
     knitr,
     rmarkdown

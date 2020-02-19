@@ -12,12 +12,28 @@ fetch_county_geographies <- function(fips_state, fips_county) {
   return(out)
 }
 
+#' create_county_boundaries
+#'
+#' @param statey String
+#' @param countyy String
+#'
+#' @return SFC
+#' @export
+#'
+#' @examples
+#' create_county_boundaries(statey = 'MA', countyy = 'Norfolk')
 create_county_boundaries <- function(statey, countyy) {
   ## This function gets a county and dissolves it...
-  county <- fetch_county_geographies(fips_state = statey,
-                                     fips_county = countyy)
-  print(paste('The CRS of incoming is:', st_crs(county)))
+  county <- tigris::county_subdivisions(
+    class = "sf",
+    county = countyy,
+    cb = TRUE,
+    state = statey
+  )
+  print(paste('The CRS of incoming is:', sf::st_crs(county)))
   ## Dissolve!
-  output <- county %>% st_union(., by = STATEFP)
+  output <-
+    sf::st_union(x = county, by = 'STATEFP')
   return(output)
 }
+

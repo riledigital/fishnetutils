@@ -239,7 +239,8 @@ save_file(to_save = fishnet_latlong, geo_type = 'fishnet', format = 'GPKG',
 
 
 ```{r}
-
-walk(jobs, save_all_outputs)
+library('fishnetutils')
+# apply(jobs, FUN=save_all_outputs)
+apply(jobs, 1, FUN = save_all_outputs)
 
 ```

@@ -11,7 +11,7 @@ make_buffered_road(state_name, county_name, crs_in, buffer_width)
 
 \item{county_name}{Character,}
 
-\item{crs_in}{Numeric, int,}
+\item{crs_in}{Numeric, int, a planar CRS}
 
 \item{buffer_width}{Int numeric, assumes unit of crs_in. Width of the buffer to build around the road}
 }

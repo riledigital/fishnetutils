@@ -40,17 +40,16 @@ save_file <-
                geo_type,
                paste0(as.character(county_name), county_abbrev, '.' , format))
 
-    if (fs::dir_exists(path_wd('data_out', geo_type))) ) {
+    if (fs::dir_exists(fs::path_wd('data_out', geo_type)))  {
       update_existing <- TRUE
     } else {
       update_existing <- FALSE
     }
 
-
     # print('Produced file:')
     sf::st_write(obj = to_save,
                  dsn = data_out,
-                 update = FALSE)
+                 update = update_existing)
   }
 
 
@@ -65,14 +64,22 @@ save_file <-
 #' @examples
 save_all_outputs <- function(x) {
   # TODO x is a row listing used for batch processing
-  print(as.numeric(x['crs_utm']))
+  print(x)
+  # print(as.numeric(x$crs_utm))
 
   county_bounds <-
-    create_county_boundaries(statey = x['fips_state'], countyy = x['fips_county'])
-  fishnet_clipped <-
-    create_fishnet_clip(inputty = county_bounds,
-                        crs_to = as.numeric(x['crs_utm'])) %>%
-    sf::st_transform(x = ., crs = CRS_WGS84)
+    create_county_boundaries(statey = x['fips_state'],
+                             countyy = x['fips_county'])
+
+  # TODO Test if this is projected right
+  fishnet_clipped <- make_buffered_road(state_name = x['fips_state'],
+                                        county_name = x['fips_county'],
+                                        crs_in = x['crs_epsg'],
+                                        buffer_width = 600)
+
+  # fishnet_clipped <-
+  #   create_fishnet_clip(inputty = county_bounds,
+  #                       crs_to = sf::st_crs(county_bounds)) %>% sf::st_transform(x = ., crs = CRS_WGS84)
   ## Then do the export!
   # append(x = fishnets_outputs, values = fishnet_clipped)
   county_name <- as.character(x['Names'])

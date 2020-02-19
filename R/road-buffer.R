@@ -5,7 +5,7 @@ CRS_WGS84 <- 4326
 #'
 #' @param state_name Character,
 #' @param county_name Character,
-#' @param crs_in Numeric, int,
+#' @param crs_in Numeric, int, a planar CRS
 #' @param buffer_width Int numeric, assumes unit of crs_in. Width of the buffer to build around the road
 #'
 #' @return SFC containing a multipolygon showing a road buffer.
@@ -66,10 +66,12 @@ create_fishnet_clip <- function(inputty, crs_to, cell_size = 5280) {
   fishnet <- input %>%
     sf::st_bbox() %>%
     sf::st_make_grid(x = .,
-                 cellsize = cell_size,
-                 what = 'centers')
+                     cellsize = cell_size,
+                     what = 'centers')
+  print('fishnet CRS is....')
+  print(sf::st_crs(fishnet))
   # plot(fishnetty)
-  sf::st_set_crs(value = sf::st_crs(input), x = fishnet)
+  sf::st_set_crs(x = fishnet, value = sf::st_crs(input))
   pts_output <- sf::st_intersection(fishnet, input)
   ## TODO Figrue out why the output is badly projected?
   return(pts_output)
