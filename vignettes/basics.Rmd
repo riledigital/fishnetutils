@@ -7,8 +7,19 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Downloading GIS data for Brookline
+# Setup
 
+Load fishnetutils
+
+```{r setup}
+library(fishnetutils)
+
+
+```
+
+
+
+# Downloading GIS data for Brookline
 
 We can use `make_buffered_road` to create a road-buffer for Norfolk County.
 
@@ -24,22 +35,32 @@ plot(norfolk)
 
 ## Creating the fishnet
 
-Default cell size is 5280 feet (1 mile). Unit is determined by `crs_to`
+Default cell size is 5280 feet (1 mile). Unit is determined by `crs_to`.
 
 ```{r}
 
 fishnet_unclipped <- create_fishnet_clip(norfolk, 
                                          crs_to = sf::st_crs(norfolk),
-                                         cell_size = 5280)
-
-plot(fishnet_unclipped)
+                                         cell_size = 5280/2)
+fishnet_latlong <- fishnet_unclipped %>% sf::st_transform(x = ., 4326)
+View(fishnet_unclipped %>%  sf::st_transform(x = ., 4326))
+plot(fishnet_latlong)
 ```
 
 ## Exporting files
 
 Use the convenience functions for exporting:
 
+TODO
+ 
+```{r}
 
+sf::write_sf(fishnet_latlong,
+             dsn = 'Norfolk_halfmile.geojson',
+             driver = 'GeoJSON',
+             update = TRUE)
+
+```
 
 # Test: water buffering
 
