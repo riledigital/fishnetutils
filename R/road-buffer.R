@@ -1,7 +1,7 @@
-library(tigris)
-library(sf)
+# SOME VARIABLES ---------------------------------------------------------------
+CRS_WGS84 <- 4326
 
-#' Title
+#' make_buffered_road
 #'
 #' @param state_name Character,
 #' @param county_name Character,
@@ -28,10 +28,6 @@ make_buffered_road <-
       sf::st_union(x = . , by_feature = TRUE)
     return(shape)
   }
-
-
-# SOME VARIABLES ---------------------------------------------------------------
-CRS_WGS84 <- 4326
 
 
 ## TODO: Func that saves files for convenience.
@@ -63,7 +59,7 @@ fetch_county_geographies <- function(fips_state, fips_county) {
 #'
 #' @examples
 create_fishnet_clip <- function(inputty, crs_to, cell_size = 5280) {
-  print(paste0('inputty CRS is: ', st_crs(inputty)))
+  print(paste0('inputty CRS is: ', sf::st_crs(inputty)))
   ## These need to be projected beforehand.
   input <- inputty %>%
     sf::st_transform(x = ., crs = crs_to)
