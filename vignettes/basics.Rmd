@@ -243,4 +243,14 @@ library('fishnetutils')
 # apply(jobs, FUN=save_all_outputs)
 apply(jobs, 1, FUN = save_all_outputs)
 
+
+```
+
+
+## Create clipped fishnet 
+```{r}
+
+
+create_fishnet_clip(inputty = norfolk, crs_to = )
+
 ```

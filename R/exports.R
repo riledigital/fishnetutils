@@ -64,22 +64,23 @@ save_file <-
 #' @examples
 save_all_outputs <- function(x) {
   # TODO x is a row listing used for batch processing
-  print(x)
-  # print(as.numeric(x$crs_utm))
+  # print(x)
+  print(as.numeric(x['crs_epsg']))
 
   county_bounds <-
     create_county_boundaries(statey = x['fips_state'],
                              countyy = x['fips_county'])
 
   # TODO Test if this is projected right
-  fishnet_clipped <- make_buffered_road(state_name = x['fips_state'],
+  buffer_road <- make_buffered_road(state_name = x['fips_state'],
                                         county_name = x['fips_county'],
-                                        crs_in = x['crs_epsg'],
+                                        crs_in = as.numeric(x['crs_epsg']),
                                         buffer_width = 600)
 
-  # fishnet_clipped <-
-  #   create_fishnet_clip(inputty = county_bounds,
-  #                       crs_to = sf::st_crs(county_bounds)) %>% sf::st_transform(x = ., crs = CRS_WGS84)
+  fishnet_clipped <-
+    create_fishnet_clip(inputty = buffer_road,
+                        crs_to = sf::st_crs(buffer_road)) %>%
+    sf::st_transform(x = ., crs = CRS_WGS84)
   ## Then do the export!
   # append(x = fishnets_outputs, values = fishnet_clipped)
   county_name <- as.character(x['Names'])

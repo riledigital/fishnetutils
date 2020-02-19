@@ -32,7 +32,7 @@ make_buffered_road <-
 
 ## TODO: Func that saves files for convenience.
 fetch_county_geographies <- function(fips_state, fips_county) {
-  out <- county_subdivisions(
+  out <- tigris::county_subdivisions(
     class = "sf",
     county = fips_county,
     cb = TRUE,
@@ -48,10 +48,11 @@ fetch_county_geographies <- function(fips_state, fips_county) {
   return(out)
 }
 
+
 #' create_fishnet_clip
 #'
 #' @param inputty SF or SFC
-#' @param crs_to Int or numeric
+#' @param crs_to Int or numeric. planar projected
 #' @param cell_size Int or numeric
 #'
 #' @return SFC of fishnet points, not clipped
@@ -59,7 +60,9 @@ fetch_county_geographies <- function(fips_state, fips_county) {
 #'
 #' @examples
 create_fishnet_clip <- function(inputty, crs_to, cell_size = 5280) {
+  print("Warning we are using a lousy function...")
   print(paste0('inputty CRS is: ', sf::st_crs(inputty)))
+
   ## These need to be projected beforehand.
   input <- inputty %>%
     sf::st_transform(x = ., crs = crs_to)
@@ -72,6 +75,7 @@ create_fishnet_clip <- function(inputty, crs_to, cell_size = 5280) {
   print(sf::st_crs(fishnet))
   # plot(fishnetty)
   sf::st_set_crs(x = fishnet, value = sf::st_crs(input))
+
   pts_output <- sf::st_intersection(fishnet, input)
   ## TODO Figrue out why the output is badly projected?
   return(pts_output)
