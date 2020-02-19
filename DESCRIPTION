@@ -11,8 +11,11 @@ LazyData: true
 Imports:
   sf,
   tigris,
-  dplyr
+  dplyr,
+  fs,
+  devtools
 Suggests: 
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+RoxygenNote: 7.0.2
