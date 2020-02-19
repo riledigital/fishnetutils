@@ -1,3 +1,27 @@
+---
+title: "test"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{test}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(fishnetutils)
+
+
+```
+
+
+```{r}
 # Scratch
 pacman::p_load('tigris', 'sf')
 
@@ -116,3 +140,5 @@ county_subdivisions(
   st_write(obj = .,
            dsn = 'Bronx_36005.geojson',
            update = TRUE)
+
+```

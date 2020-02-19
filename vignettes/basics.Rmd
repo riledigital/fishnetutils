@@ -1,9 +1,45 @@
 ---
-title: "fishnetutils sample"
-output: html_notebook
+title: "basics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{basics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-# Downloading GIS data
+# Downloading GIS data for Brookline
+
+
+We can use `make_buffered_road` to create a road-buffer for Norfolk County.
+
+```{r}
+
+norfolk <- 
+  make_buffered_road(state_name = 'MA', county_name = 'Norfolk', crs_in = 102286, 
+                     buffer_width = 2640)
+
+plot(norfolk)
+
+```
+
+## Creating the fishnet
+
+Default cell size is 5280 feet (1 mile). Unit is determined by `crs_to`
+
+```{r}
+
+fishnet_unclipped <- create_fishnet_clip(norfolk, 
+                                         crs_to = sf::st_crs(norfolk),
+                                         cell_size = 5280)
+
+plot(fishnet_unclipped)
+```
+
+## Exporting files
+
+Use the convenience functions for exporting:
+
+
 
 # Test: water buffering
 

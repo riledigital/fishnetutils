@@ -52,18 +52,29 @@ fetch_county_geographies <- function(fips_state, fips_county) {
   return(out)
 }
 
-
-create_fishnet_clip <- function(inputty, crs_to) {
+#' create_fishnet_clip
+#'
+#' @param inputty SF or SFC
+#' @param crs_to Int or numeric
+#' @param cell_size Int or numeric
+#'
+#' @return SFC of fishnet points, not clipped
+#' @export
+#'
+#' @examples
+create_fishnet_clip <- function(inputty, crs_to, cell_size = 5280) {
   print(paste0('inputty CRS is: ', st_crs(inputty)))
   ## These need to be projected beforehand.
-  input <- inputty %>% st_transform(x = ., crs = crs_to)
-  fishnet <- input %>% st_bbox() %>%
-    st_make_grid(x = .,
-                 cellsize = 500,
+  input <- inputty %>%
+    sf::st_transform(x = ., crs = crs_to)
+  fishnet <- input %>%
+    sf::st_bbox() %>%
+    sf::st_make_grid(x = .,
+                 cellsize = cell_size,
                  what = 'centers')
   # plot(fishnetty)
-  st_set_crs(value = st_crs(input), x = fishnet)
-  pts_output <- st_intersection(fishnet, input)
+  sf::st_set_crs(value = sf::st_crs(input), x = fishnet)
+  pts_output <- sf::st_intersection(fishnet, input)
   ## TODO Figrue out why the output is badly projected?
   return(pts_output)
 }
