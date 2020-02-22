@@ -29,6 +29,11 @@ norfolk <-
   make_buffered_road(state_name = 'MA', county_name = 'Norfolk', crs_in = 102286, 
                      buffer_width = 2640)
 
+nf_roads <- tigris::roads('ma', 'norfolk')
+
+nf_roads %>% sf::st_as_sfc() %>% sf::st_write(dsn = './norfolkroads2.gpkg', driver = 'GPKG')
+
+
 plot(norfolk)
 
 ```
